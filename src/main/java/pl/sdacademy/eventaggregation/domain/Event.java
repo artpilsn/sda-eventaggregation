@@ -34,7 +34,7 @@ public class Event {
     private String title;
 
     @Column(name = "description")
-    @Length(max = 500, message = "Description should be up to 500 characters long.")
+    @Length(min = 20, max = 500, message = "Description should be up to 500 characters long - but not less than 20 characters.")
     private String description;
 
     //TODO: relation + User object
@@ -52,7 +52,7 @@ public class Event {
     private String address;
 
     @JsonIgnore
-    @AssertTrue(message = "Invalid begin/end of event, both fields are required.")
+    @AssertTrue(message = "Invalid begin/end of event - both fields are required.")
     private boolean isDateValid() {
         return nonNull(from) && nonNull(to)
                 && from.isAfter(LocalDateTime.now())

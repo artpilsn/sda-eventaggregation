@@ -15,7 +15,6 @@ import pl.sdacademy.eventaggregation.repository.EventRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -104,7 +103,7 @@ class EventServiceTest {
         when(eventRepository.findById(idx)).thenReturn(Optional.of(event));
         when(eventConverter.eventToEventModel(event)).thenReturn(result);
 
-        final EventModel actualResult = eventService.getById(idx);
+        final EventModel actualResult = eventService.getByIdx(idx);
 
         assertThat(actualResult).isNotNull();
         assertThat(actualResult).isExactlyInstanceOf(EventModel.class);
@@ -116,7 +115,7 @@ class EventServiceTest {
         final Long idx = 1L;
         when(eventRepository.findById(any())).thenReturn(Optional.empty());
 
-        final EventException actualException = Assertions.assertThrows(EventException.class, () -> eventService.getById(idx));
+        final EventException actualException = Assertions.assertThrows(EventException.class, () -> eventService.getByIdx(idx));
         assertThat(actualException).hasMessage("Event with idx " + idx + " does not exist");
     }
 }

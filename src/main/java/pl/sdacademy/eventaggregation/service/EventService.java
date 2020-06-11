@@ -31,7 +31,7 @@ public class EventService {
         return new EventModels(eventModels);
     }
 
-    public EventModel getById(final Long idx) {
+    public EventModel getByIdx(final Long idx) {
         return eventConverter.eventToEventModel(getIfExist(idx));
     }
 
