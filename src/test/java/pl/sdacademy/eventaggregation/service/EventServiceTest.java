@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -94,7 +93,6 @@ class EventServiceTest {
         final EventModel result = EventModel.builder()
                 .idx(idx)
                 .title("xxxx")
-                .address("xxxxx 32")
                 .description("xxxxxx")
                 .from(LocalDateTime.of(2020, 8, 5, 16, 30))
                 .to(LocalDateTime.of(2020, 8, 5, 21, 30))
@@ -117,5 +115,118 @@ class EventServiceTest {
 
         final EventException actualException = Assertions.assertThrows(EventException.class, () -> eventService.getByIdx(idx));
         assertThat(actualException).hasMessage("Event with idx " + idx + " does not exist");
+    }
+
+    @Test
+    void shouldCreateNewEvent() {
+        final Long idx = 1L;
+        final String hostUsername = "Enessetere";
+        final String title = "title";
+        final String description = "description";
+        final LocalDateTime from = LocalDateTime.of(2020,7,1,14,20);
+        final LocalDateTime to = LocalDateTime.of(2020,7,1,18,50);
+        final EventModel input = EventModel.builder()
+                .hostUsername(hostUsername)
+                .title(title)
+                .description(description)
+                .from(from)
+                .to(to)
+                .build();
+        final Event inputEvent = Event.builder()
+                .hostUsername(hostUsername)
+                .title(title)
+                .description(description)
+                .from(from)
+                .to(to)
+                .build();
+        final Event generatedEvent = Event.builder()
+                .idx(idx)
+                .hostUsername(hostUsername)
+                .title(title)
+                .description(description)
+                .from(from)
+                .to(to)
+                .build();
+        final EventModel expectedResult = EventModel.builder()
+                .idx(idx)
+                .hostUsername(hostUsername)
+                .title(title)
+                .description(description)
+                .from(from)
+                .to(to)
+                .build();
+        when(eventRepository.save(inputEvent)).thenReturn(generatedEvent);
+        when(eventRepository.findAllByTitle(title)).thenReturn(List.of());
+        when(eventConverter.eventModelToEvent(input)).thenReturn(inputEvent);
+
+        final EventModel actualResult = eventService.create(input);
+
+        assertThat(actualResult).isNotNull();
+        assertThat(actualResult).isExactlyInstanceOf(EventModel.class);
+        assertThat(actualResult).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void shouldThrowEventExceptionWhenCreatingEventWithSameTitleAndSimilarDate() {
+        final Long idx = 1L;
+        final String hostUsername = "Enessetere";
+        final String title = "title";
+        final String description = "description";
+        final LocalDateTime from = LocalDateTime.of(2020,7,1,14,20);
+        final LocalDateTime to = LocalDateTime.of(2020,7,1,18,50);
+        final EventModel input = EventModel.builder()
+                .hostUsername(hostUsername)
+                .title(title)
+                .description(description)
+                .from(from)
+                .to(to)
+                .build();
+        final Event existingEvent = Event.builder()
+                .idx(idx)
+                .hostUsername(hostUsername)
+                .title(title)
+                .description(description)
+                .from(from.minusMonths(1))
+                .to(to.minusHours(2))
+                .build();
+        when(eventRepository.findAllByTitle(title)).thenReturn(List.of(existingEvent));
+
+        final EventException eventException = Assertions.assertThrows(EventException.class, () -> eventService.create(input));
+        assertThat(eventException).hasMessage("You have created same event in this time gap.");
+    }
+
+    @Test
+    void shouldReturnEventModelsWithValuesOfTitle() {
+        final Long idx = 1L;
+        final String hostUsername = "Enessetere";
+        final String title = "title";
+        final String description = "description";
+        final LocalDateTime from = LocalDateTime.of(2020,7,1,14,20);
+        final LocalDateTime to = LocalDateTime.of(2020,7,1,18,50);
+        final Event existingEvent = Event.builder()
+                .idx(idx)
+                .hostUsername(hostUsername)
+                .title(title)
+                .description(description)
+                .from(from)
+                .to(to)
+                .build();
+        final EventModel outputModel = EventModel.builder()
+                .idx(idx)
+                .hostUsername(hostUsername)
+                .title(title)
+                .description(description)
+                .from(from)
+                .to(to)
+                .build();
+        final EventModels expectedResult = new EventModels(List.of(outputModel));
+        when(eventRepository.findAllByTitle(title)).thenReturn(List.of(existingEvent));
+        when(eventConverter.eventToEventModel(existingEvent)).thenReturn(outputModel);
+
+        final EventModels actualResult = eventService.getAllByTitle(title);
+
+        assertThat(actualResult).isNotNull();
+        assertThat(actualResult).isExactlyInstanceOf(EventModels.class);
+        assertThat(actualResult).isEqualTo(expectedResult);
     }
 }

@@ -1,5 +1,6 @@
 Some title,some long text that have over 20 character,,Host cannot be empty.,hostUsername
-,some long text that have over 20 character,Enessetere,Title is required,title
+,some long text that have over 20 character,Enessetere,Title cannot contains only white space characters,title
+    ,some long text that have over 20 character,Enessetere,Title cannot contains only white space characters,title
 So,some long text that have over 20 character,Enessetere,Title should have 3 to 30 characters.,title
 Some long title that have over twenty characters,some long text that have over 20 character,Enessetere,Title should have 3 to 30 characters.,title
 Some,some text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have  forty  characterssome text  that  have,Enessetere,Description should be up to 500 characters long - but not less than 20 characters.,description

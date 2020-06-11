@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -28,7 +29,7 @@ public class Event {
     @GeneratedValue
     private Long idx;
 
-    @NotNull(message = "Title is required")
+    @NotBlank(message = "Title cannot contains only white space characters")
     @Length(min = 3, max = 30, message = "Title should have 3 to 30 characters.")
     @Column(name = "title")
     private String title;
