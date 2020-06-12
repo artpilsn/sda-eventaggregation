@@ -10,6 +10,7 @@ import pl.sdacademy.eventaggregation.repository.EventRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,5 +69,14 @@ public class EventService {
                 .map(eventConverter::eventToEventModel)
                 .collect(Collectors.toList());
         return new EventModels(models);
+    }
+
+    public void delete(final Long idx) {
+        final Optional<Event> optionalEvent = eventRepository.findById(idx);
+        if (optionalEvent.isPresent()) {
+            eventRepository.delete(optionalEvent.get());
+        } else {
+            throw new EventException("Event with given idx does not exist.");
+        }
     }
 }

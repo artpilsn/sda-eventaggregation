@@ -3,6 +3,8 @@ package pl.sdacademy.eventaggregation.service;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,6 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +35,9 @@ class EventServiceTest {
 
     @InjectMocks
     private EventService eventService;
+
+    @Captor
+    private ArgumentCaptor<Event> eventCaptor;
 
     @Test
     void shouldReturnEventModelsWithValues() {
@@ -228,5 +234,32 @@ class EventServiceTest {
         assertThat(actualResult).isNotNull();
         assertThat(actualResult).isExactlyInstanceOf(EventModels.class);
         assertThat(actualResult).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void shouldDeleteExistingEvent() {
+        final Event event = Event.builder()
+                .title("title")
+                .description("description")
+                .hostUsername("host")
+                .from(LocalDateTime.of(2020, 7, 1, 12, 0))
+                .to(LocalDateTime.of(2020, 7, 1, 15, 0))
+                .build();
+        when(eventRepository.findById(any())).thenReturn(Optional.of(event));
+
+        eventService.delete(any());
+
+        verify(eventRepository).delete(eventCaptor.capture());
+        assertThat(eventCaptor.getValue()).isNotNull();
+        assertThat(eventCaptor.getValue()).isEqualTo(event);
+    }
+
+    @Test
+    void shouldThrowEventExceptionWhileRemoveNonExistEvent() {
+        when(eventRepository.findById(any())).thenReturn(Optional.empty());
+
+        final EventException eventException = Assertions.assertThrows(EventException.class, () -> eventService.delete(any()));
+
+        assertThat(eventException).hasMessage("Event with given idx does not exist.");
     }
 }
