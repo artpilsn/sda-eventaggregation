@@ -1,0 +1,39 @@
+.main {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    color: black;
+    background-color: antiquewhite;
+    font-size: 2em;
+    padding: 5px;
+}
+
+.form {
+    display: inline-block;
+    width: 100em;
+    text-align: left;
+    flex-direction: row;
+    align-items: center;
+    color: black;
+    background-color: darkseagreen;
+    font-size: 1.5em;
+    padding: 5px;
+}
+
+.user_page {
+    display: flex;
+    align-items: flex-start;
+    color: black;
+    background-color: antiquewhite;
+    font-size: 1.5em;
+    padding: 5px;
+}
+
+
+input {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: antiquewhite;
+    width: 300px;
+    align-items: flex-end;
+}
