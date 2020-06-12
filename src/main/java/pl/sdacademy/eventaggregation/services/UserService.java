@@ -14,10 +14,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-//    public User createUser(final User user){
-//        validateEmailDontExists(user.getEmail());
-//        return userRepository;
-//    }
+    public User createUser(final User user){
+        return userRepository.create(user);
+    }
 }
 
 

@@ -11,7 +11,7 @@
 	<groupId>pl.sdacademy</groupId>
 	<artifactId>wiosna-demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>wiosna-demo</name>
+	<name>Event-Aggregation</name>
 	<description>Spring App Demo</description>
 
 	<properties>

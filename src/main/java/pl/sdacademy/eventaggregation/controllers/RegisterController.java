@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.sdacademy.eventaggregation.domain.User;
+import pl.sdacademy.eventaggregation.services.UserService;
 
 import javax.validation.Valid;
 
@@ -16,10 +17,16 @@ import javax.validation.Valid;
 @RequestMapping(value = "/register")
 public class RegisterController {
     private static final String MODEL_ATTR_USER = "user";
+    private final UserService userService;
+
+    public RegisterController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public String showUserPage(final ModelMap modelMap) {
         modelMap.addAttribute(MODEL_ATTR_USER, new User());
+
         return "register";
     }
 
@@ -36,6 +43,7 @@ public class RegisterController {
             modelMap.addAttribute("username", user.getUsername());
             modelMap.addAttribute("email", user.getEmail());
             modelMap.addAttribute("password", user.getPassword());
+            userService.createUser(user);
             return "user_page";
         }
     }
