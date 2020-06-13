@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import pl.sdacademy.eventaggregation.model.EventModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -58,5 +59,13 @@ public class Event {
         return nonNull(from) && nonNull(to)
                 && from.isAfter(LocalDateTime.now())
                 && to.isAfter(from);
+    }
+
+    public void updateFields(final EventModel model) {
+        this.title = model.getTitle();
+        this.description = model.getDescription();
+        this.address = model.getAddress();
+        this.from = model.getFrom();
+        this.to = model.getTo();
     }
 }

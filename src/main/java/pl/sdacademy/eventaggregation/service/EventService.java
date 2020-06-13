@@ -79,4 +79,13 @@ public class EventService {
             throw new EventException("Event with given idx does not exist.");
         }
     }
+
+    public void updateEvent(final Long idx, final EventModel eventChange) {
+        final Event existingEvent = getIfExist(idx);
+        if (!existingEvent.getHostUsername().equals(eventChange.getHostUsername())) {
+            throw new EventException("Cannot update event. Host cannot be changed.");
+        }
+        existingEvent.updateFields(eventChange);
+        eventRepository.save(existingEvent);
+    }
 }
