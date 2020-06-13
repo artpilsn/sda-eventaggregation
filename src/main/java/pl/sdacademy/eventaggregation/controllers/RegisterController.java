@@ -32,8 +32,8 @@ public class RegisterController {
 
 
     @PostMapping
-    public String handleSaveUser(@Valid @ModelAttribute(name = MODEL_ATTR_USER) final User user, final ModelMap modelMap,
-                                 final BindingResult bindingResult) {
+    public String handleSaveUser(@Valid @ModelAttribute(name = MODEL_ATTR_USER) final User user, final BindingResult bindingResult,
+                                 final ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             return "register";
         }

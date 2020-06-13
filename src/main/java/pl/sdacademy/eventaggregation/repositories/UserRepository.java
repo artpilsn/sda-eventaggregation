@@ -19,6 +19,4 @@ public class UserRepository {
         entityManager.persist(user);
         return user;
     }
-
-
 }
