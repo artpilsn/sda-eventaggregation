@@ -1,6 +1,5 @@
 package pl.sdacademy.eventaggregation.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -22,13 +21,69 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EventServiceTest {
 
+    // region DECLARATIONS
+    private static final Long FIRST_INDEX = 1L;
+    private static final Event CORRECT_EVENT = Event.builder()
+            .address("Address")
+            .description("Description")
+            .hostUsername("Host")
+            .title("Title")
+            .idx(FIRST_INDEX)
+            .from(LocalDateTime.of(2020, 8, 5, 16, 30))
+            .to(LocalDateTime.of(2020, 8, 5, 21, 30))
+            .build();
+    private static final Event CORRECT_EVENT_WITHOUT_INDEX = Event.builder()
+            .address("Address")
+            .description("Description")
+            .hostUsername("Host")
+            .title("Title")
+            .from(LocalDateTime.of(2020, 8, 5, 16, 30))
+            .to(LocalDateTime.of(2020, 8, 5, 21, 30))
+            .build();
+    private static final EventModel CORRECT_EVENT_MODEL = EventModel.builder()
+            .address("Address")
+            .description("Description")
+            .hostUsername("Host")
+            .title("Title")
+            .idx(FIRST_INDEX)
+            .from(LocalDateTime.of(2020, 8, 5, 16, 30))
+            .to(LocalDateTime.of(2020, 8, 5, 21, 30))
+            .build();
+    private static final EventModel CORRECT_EVENT_MODEL_WITHOUT_INDEX = EventModel.builder()
+            .address("Address")
+            .description("Description")
+            .hostUsername("Host")
+            .title("Title")
+            .from(LocalDateTime.of(2020, 8, 5, 16, 30))
+            .to(LocalDateTime.of(2020, 8, 5, 21, 30))
+            .build();
+    private static final EventModel CORRECT_EVENT_MODEL_CHANGED_WITHOUT_INDEX = EventModel.builder()
+            .address("AnotherAddress")
+            .description("AnotherDescription")
+            .hostUsername("Host")
+            .title("AnotherTitle")
+            .from(LocalDateTime.of(2020, 8, 5, 16, 30))
+            .to(LocalDateTime.of(2020, 8, 5, 21, 30))
+            .build();
+    private static final EventModel WRONG_EVENT_MODEL_CHANGED_WITHOUT_INDEX = EventModel.builder()
+            .address("AnotherAddress")
+            .description("AnotherDescription")
+            .hostUsername("OtherHost")
+            .title("AnotherTitle")
+            .from(LocalDateTime.of(2020, 8, 5, 16, 30))
+            .to(LocalDateTime.of(2020, 8, 5, 21, 30))
+            .build();
+    private static final EventModels EVENT_MODELS_WITH_CORRECT_EVENT_MODEL = new EventModels(List.of(CORRECT_EVENT_MODEL));
+    //endregion
+
     @Mock
-    EventConverter eventConverter;
+    private EventConverter eventConverter;
 
     @Mock
     private EventRepository eventRepository;
@@ -41,36 +96,13 @@ class EventServiceTest {
 
     @Test
     void shouldReturnEventModelsWithValues() {
-        final Event event = Event.builder()
-                .address("Weird 64")
-                .description("Pogo night")
-                .hostUsername("MetalHead")
-                .title("Let's Mosh Pit")
-                .idx(1L)
-                .from(LocalDateTime.of(2020, 8, 5, 16, 30))
-                .to(LocalDateTime.of(2020, 8, 5, 21, 30))
-                .build();
-        final EventModel eventModel = EventModel.builder()
-                .address("Weird 64")
-                .description("Pogo night")
-                .hostUsername("MetalHead")
-                .title("Let's Mosh Pit")
-                .idx(1L)
-                .from(LocalDateTime.of(2020, 8, 5, 16, 30))
-                .to(LocalDateTime.of(2020, 8, 5, 21, 30))
-                .build();
-        final EventModels result = new EventModels(List.of(eventModel));
-        when(eventRepository.findAll()).thenReturn(List.of(event));
-        when(eventConverter.eventToEventModel(any())).thenReturn(eventModel);
+        when(eventRepository.findAll()).thenReturn(List.of(CORRECT_EVENT));
+        when(eventConverter.eventToEventModel(any(Event.class))).thenReturn(CORRECT_EVENT_MODEL);
 
         final EventModels actualResult = eventService.getAll();
 
-        assertThat(actualResult).isNotNull();
-        assertThat(actualResult).isExactlyInstanceOf(EventModels.class);
-        assertThat(actualResult.getEventModels()).isNotNull();
-        assertThat(actualResult.getEventModels()).hasSize(1);
-        assertThat(actualResult).isEqualTo(result);
-        assertThat(actualResult.getEventModels().get(0)).isEqualTo(eventModel);
+        assertThat(actualResult).isNotNull().isExactlyInstanceOf(EventModels.class).isEqualTo(EVENT_MODELS_WITH_CORRECT_EVENT_MODEL);
+        assertThat(actualResult.getEventModels()).isNotNull().hasSize(1).first().isEqualTo(CORRECT_EVENT_MODEL);
     }
 
     @Test
@@ -79,251 +111,94 @@ class EventServiceTest {
 
         final EventModels actualResult = eventService.getAll();
 
-        assertThat(actualResult).isNotNull();
-        assertThat(actualResult).isExactlyInstanceOf(EventModels.class);
+        assertThat(actualResult).isNotNull().isExactlyInstanceOf(EventModels.class);
         assertThat(actualResult.getEventModels()).isEmpty();
     }
 
     @Test
     void shouldReturnEventModelWithIdx() {
-        final Long idx = 1L;
-        final Event event = Event.builder()
-                .idx(idx)
-                .title("xxxx")
-                .address("xxxxx 32")
-                .description("xxxxxx")
-                .from(LocalDateTime.of(2020, 8, 5, 16, 30))
-                .to(LocalDateTime.of(2020, 8, 5, 21, 30))
-                .hostUsername("Enessetere")
-                .build();
-        final EventModel result = EventModel.builder()
-                .idx(idx)
-                .title("xxxx")
-                .description("xxxxxx")
-                .from(LocalDateTime.of(2020, 8, 5, 16, 30))
-                .to(LocalDateTime.of(2020, 8, 5, 21, 30))
-                .hostUsername("Enessetere")
-                .build();
-        when(eventRepository.findById(idx)).thenReturn(Optional.of(event));
-        when(eventConverter.eventToEventModel(event)).thenReturn(result);
+        when(eventRepository.findById(FIRST_INDEX)).thenReturn(Optional.of(CORRECT_EVENT));
+        when(eventConverter.eventToEventModel(CORRECT_EVENT)).thenReturn(CORRECT_EVENT_MODEL);
 
-        final EventModel actualResult = eventService.getByIdx(idx);
+        final EventModel actualResult = eventService.getByIdx(FIRST_INDEX);
 
-        assertThat(actualResult).isNotNull();
-        assertThat(actualResult).isExactlyInstanceOf(EventModel.class);
-        assertThat(actualResult).isEqualTo(result);
+        assertThat(actualResult).isNotNull().isExactlyInstanceOf(EventModel.class).isEqualTo(CORRECT_EVENT_MODEL);
     }
 
     @Test
     void shouldThrowEventExceptionWhenThereIsNoSuchEvent() {
-        final Long idx = 1L;
         when(eventRepository.findById(any())).thenReturn(Optional.empty());
 
-        final EventException actualException = assertThrows(EventException.class, () -> eventService.getByIdx(idx));
-        assertThat(actualException).hasMessage("Event with idx " + idx + " does not exist");
+        final EventException actualException = assertThrows(EventException.class, () -> eventService.getByIdx(FIRST_INDEX));
+        assertThat(actualException).hasMessage("Event with idx " + FIRST_INDEX + " does not exist");
     }
 
     @Test
     void shouldCreateNewEvent() {
-        final Long idx = 1L;
-        final String hostUsername = "Enessetere";
-        final String title = "title";
-        final String description = "description";
-        final LocalDateTime from = LocalDateTime.of(2020, 7, 1, 14, 20);
-        final LocalDateTime to = LocalDateTime.of(2020, 7, 1, 18, 50);
-        final EventModel input = EventModel.builder()
-                .hostUsername(hostUsername)
-                .title(title)
-                .description(description)
-                .from(from)
-                .to(to)
-                .build();
-        final Event inputEvent = Event.builder()
-                .hostUsername(hostUsername)
-                .title(title)
-                .description(description)
-                .from(from)
-                .to(to)
-                .build();
-        final Event generatedEvent = Event.builder()
-                .idx(idx)
-                .hostUsername(hostUsername)
-                .title(title)
-                .description(description)
-                .from(from)
-                .to(to)
-                .build();
-        final EventModel expectedResult = EventModel.builder()
-                .idx(idx)
-                .hostUsername(hostUsername)
-                .title(title)
-                .description(description)
-                .from(from)
-                .to(to)
-                .build();
-        when(eventRepository.save(inputEvent)).thenReturn(generatedEvent);
-        when(eventRepository.findAllByTitle(title)).thenReturn(List.of());
-        when(eventConverter.eventModelToEvent(input)).thenReturn(inputEvent);
+        when(eventRepository.save(CORRECT_EVENT_WITHOUT_INDEX)).thenReturn(CORRECT_EVENT);
+        when(eventRepository.findAllByTitle(any(String.class))).thenReturn(List.of());
+        when(eventConverter.eventModelToEvent(CORRECT_EVENT_MODEL_WITHOUT_INDEX)).thenReturn(CORRECT_EVENT_WITHOUT_INDEX);
 
-        final EventModel actualResult = eventService.create(input);
+        final EventModel actualResult = eventService.create(CORRECT_EVENT_MODEL_WITHOUT_INDEX);
 
-        assertThat(actualResult).isNotNull();
-        assertThat(actualResult).isExactlyInstanceOf(EventModel.class);
-        assertThat(actualResult).isEqualTo(expectedResult);
+        assertThat(actualResult).isNotNull().isExactlyInstanceOf(EventModel.class).isEqualTo(CORRECT_EVENT_MODEL);
     }
 
     @Test
-    void shouldThrowEventExceptionWhenCreatingEventWithSameTitleAndSimilarDate() {
-        final Long idx = 1L;
-        final String hostUsername = "Enessetere";
-        final String title = "title";
-        final String description = "description";
-        final LocalDateTime from = LocalDateTime.of(2020, 7, 1, 14, 20);
-        final LocalDateTime to = LocalDateTime.of(2020, 7, 1, 18, 50);
-        final EventModel input = EventModel.builder()
-                .hostUsername(hostUsername)
-                .title(title)
-                .description(description)
-                .from(from)
-                .to(to)
-                .build();
-        final Event existingEvent = Event.builder()
-                .idx(idx)
-                .hostUsername(hostUsername)
-                .title(title)
-                .description(description)
-                .from(from.minusMonths(1))
-                .to(to.minusHours(2))
-                .build();
-        when(eventRepository.findAllByTitle(title)).thenReturn(List.of(existingEvent));
+    void shouldThrowEventExceptionWhenCreatingEventWithSameTitleAndDate() {
+        when(eventRepository.findAllByTitle(any(String.class))).thenReturn(List.of(CORRECT_EVENT));
 
-        final EventException eventException = assertThrows(EventException.class, () -> eventService.create(input));
+        final EventException eventException = assertThrows(EventException.class, () -> eventService.create(CORRECT_EVENT_MODEL_WITHOUT_INDEX));
         assertThat(eventException).hasMessage("You have created same event in this time gap.");
     }
 
     @Test
     void shouldReturnEventModelsWithValuesOfTitle() {
-        final Long idx = 1L;
-        final String hostUsername = "Enessetere";
-        final String title = "title";
-        final String description = "description";
-        final LocalDateTime from = LocalDateTime.of(2020, 7, 1, 14, 20);
-        final LocalDateTime to = LocalDateTime.of(2020, 7, 1, 18, 50);
-        final Event existingEvent = Event.builder()
-                .idx(idx)
-                .hostUsername(hostUsername)
-                .title(title)
-                .description(description)
-                .from(from)
-                .to(to)
-                .build();
-        final EventModel outputModel = EventModel.builder()
-                .idx(idx)
-                .hostUsername(hostUsername)
-                .title(title)
-                .description(description)
-                .from(from)
-                .to(to)
-                .build();
-        final EventModels expectedResult = new EventModels(List.of(outputModel));
-        when(eventRepository.findAllByTitle(title)).thenReturn(List.of(existingEvent));
-        when(eventConverter.eventToEventModel(existingEvent)).thenReturn(outputModel);
+        when(eventRepository.findAllByTitle(any(String.class))).thenReturn(List.of(CORRECT_EVENT));
+        when(eventConverter.eventToEventModel(CORRECT_EVENT)).thenReturn(CORRECT_EVENT_MODEL);
 
-        final EventModels actualResult = eventService.getAllByTitle(title);
+        final EventModels actualResult = eventService.getAllByTitle(CORRECT_EVENT.getTitle());
 
-        assertThat(actualResult).isNotNull();
-        assertThat(actualResult).isExactlyInstanceOf(EventModels.class);
-        assertThat(actualResult).isEqualTo(expectedResult);
+        assertThat(actualResult).isNotNull().isExactlyInstanceOf(EventModels.class).isEqualTo(EVENT_MODELS_WITH_CORRECT_EVENT_MODEL);
     }
 
     @Test
     void shouldDeleteExistingEvent() {
-        final Event event = Event.builder()
-                .title("title")
-                .description("description")
-                .hostUsername("host")
-                .from(LocalDateTime.of(2020, 7, 1, 12, 0))
-                .to(LocalDateTime.of(2020, 7, 1, 15, 0))
-                .build();
-        when(eventRepository.findById(any())).thenReturn(Optional.of(event));
+        when(eventRepository.findById(any(Long.class))).thenReturn(Optional.of(CORRECT_EVENT));
 
-        eventService.delete(any());
-
+        eventService.delete(any(Long.class));
         verify(eventRepository).delete(eventCaptor.capture());
-        assertThat(eventCaptor.getValue()).isNotNull();
-        assertThat(eventCaptor.getValue()).isEqualTo(event);
+
+        final Event actualResult = eventCaptor.getValue();
+        assertThat(actualResult).isNotNull().isEqualTo(CORRECT_EVENT);
     }
 
     @Test
     void shouldThrowEventExceptionWhileRemoveNonExistEvent() {
-        when(eventRepository.findById(any())).thenReturn(Optional.empty());
+        when(eventRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
-        final EventException eventException = assertThrows(EventException.class, () -> eventService.delete(any()));
+        final EventException eventException = assertThrows(EventException.class, () -> eventService.delete(any(Long.class)));
 
         assertThat(eventException).hasMessage("Event with given idx does not exist.");
     }
 
     @Test
     void shouldReplaceEventWithGiven() {
-        final Long idx = 1L;
-        final LocalDateTime from = LocalDateTime.of(2020, 7, 1, 13, 0);
-        final LocalDateTime to = LocalDateTime.of(2020, 7, 2, 15, 0);
-        final Event existingEvent = Event.builder()
-                .idx(idx)
-                .title("title")
-                .description("description")
-                .hostUsername("host")
-                .from(from)
-                .to(from)
-                .build();
-        final EventModel eventChange = EventModel.builder()
-                .title("anotherTitle")
-                .description("anotherDescription")
-                .hostUsername("host")
-                .from(to)
-                .to(to)
-                .build();
-        final Event expectedResult = Event.builder()
-                .idx(idx)
-                .title("anotherTitle")
-                .description("anotherDescription")
-                .hostUsername("host")
-                .from(to)
-                .to(to)
-                .build();
-        when(eventRepository.findById(idx)).thenReturn(Optional.of(existingEvent));
-        when(eventRepository.save(any())).thenReturn(null);
+        when(eventRepository.findById(any(Long.class))).thenReturn(Optional.of(CORRECT_EVENT));
+        when(eventRepository.save(any(Event.class))).thenReturn(null);
 
-        eventService.updateEvent(idx, eventChange);
+        eventService.updateEvent(FIRST_INDEX, CORRECT_EVENT_MODEL_CHANGED_WITHOUT_INDEX);
         verify(eventRepository).save(eventCaptor.capture());
 
-        assertThat(eventCaptor.getValue()).isNotNull();
-        assertThat(eventCaptor.getValue()).isEqualTo(expectedResult);
+        final Event actualResult = eventCaptor.getValue();
+        assertThat(actualResult).isNotNull().isEqualTo(CORRECT_EVENT);
     }
 
     @Test
     void shouldThrowEventExceptionWhenHostUsernameIsIncorrect() {
-        final Long idx = 1L;
-        final LocalDateTime from = LocalDateTime.of(2020, 7, 1, 13, 0);
-        final LocalDateTime to = LocalDateTime.of(2020, 7, 2, 15, 0);
-        final Event existingEvent = Event.builder()
-                .idx(idx)
-                .title("title")
-                .description("description")
-                .hostUsername("host")
-                .from(from)
-                .to(to)
-                .build();
-        final EventModel eventChange = EventModel.builder()
-                .title("anotherTitle")
-                .description("description")
-                .hostUsername("anotherHost")
-                .from(from)
-                .to(to)
-                .build();
-        when(eventRepository.findById(idx)).thenReturn(Optional.of(existingEvent));
+        when(eventRepository.findById(any(Long.class))).thenReturn(Optional.of(CORRECT_EVENT));
 
-        final EventException eventException = assertThrows(EventException.class, () -> eventService.updateEvent(idx, eventChange));
+        final EventException eventException = assertThrows(EventException.class, () -> eventService.updateEvent(any(Long.class), WRONG_EVENT_MODEL_CHANGED_WITHOUT_INDEX));
 
         assertThat(eventException).hasMessage("Cannot update event. Host cannot be changed.");
     }

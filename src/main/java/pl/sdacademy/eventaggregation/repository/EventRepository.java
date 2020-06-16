@@ -7,4 +7,7 @@ import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByTitle(String title);
+    List<Event> findAllByTitleContains(String title);
+    List<Event> findAllByHostUsernameContains(String hostUsername);
+    List<Event> findAllByAddressContains(String address);
 }
