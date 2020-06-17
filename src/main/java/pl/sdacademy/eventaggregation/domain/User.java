@@ -31,10 +31,10 @@ public class User {
     private String lastName;
 
     @NotNull(message = "Can't be empty")
-    @Length(min = 1, max = 50, message = "1 to 15 characters required")
+    @Length(min = 1, max = 50, message = "1 to 50 characters required")
     private String username;
 
-    //validation moved toregister.html
+    //validation moved to register.html
     @NotNull(message = "Can't be empty")
     private String password;
 

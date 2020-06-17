@@ -14,11 +14,8 @@ import java.util.Optional;
 public class UserRepository {
  private final EntityManager entityManager;
 
-
-
     public UserRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
-
     }
 
     public User create(final User user){
@@ -45,9 +42,4 @@ public class UserRepository {
         }
         return Optional.empty();
     }
-
-
-
-
-
 }
