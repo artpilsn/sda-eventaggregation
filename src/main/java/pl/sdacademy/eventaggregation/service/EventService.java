@@ -8,9 +8,11 @@ import pl.sdacademy.eventaggregation.model.EventConverter;
 import pl.sdacademy.eventaggregation.model.EventModel;
 import pl.sdacademy.eventaggregation.model.EventModels;
 import pl.sdacademy.eventaggregation.repository.EventRepository;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
