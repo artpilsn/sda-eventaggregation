@@ -1,45 +1,78 @@
 <!DOCTYPE html>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>First Page</title>
+    <title>Registration form</title>
     <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+<div id="container">
+    <div id="user-options">
+        <div class="optionT">Log In</div>
+        <div class="in-use">Create Account</div>
+        <div class="optionT">User Support</div>
+        <div style="clear:both;"></div>
+    </div>
+    <div id="logo">EA - Best Event Aggregation Site</div>
+    <div id="map-bar">
+        <div class="option">News</div>
+        <div class="option">Events</div>
+        <div class="option">Forum</div>
+        <div class="option">Mobile App</div>
+        <div class="option">Shop</div>
+        <div class="option">User</div>
+        <div style="clear:both;"></div>
+    </div>
 
-<div class="main">
-    Hello there sexy beast!
-    Sign up
+
+    <div id="content">
+        <form method="post" th:action="@{/register}" th:object="${user}">
+            <span class="title">Registration form:</span>
+            <div class="form">
+                <label for="firstname" class="formL">First Name:</label>
+                <input class="formI" id="firstname" type="text" th:field="*{firstName}">
+                <span class="formI" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName Error<</span>
+            </div>
+            <div class="form">
+                <label for="lastname" class="formL">Last Name:</label>
+                <input class="formI" id="lastname" type="text" th:field="*{lastName}">
+                <span class="formI" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">lastName Error<</span>
+
+            </div>
+            <div class="form">
+                <label for="username" class="formL">Username:</label>
+                <input class="formI" id="username" type="text" th:field="*{username}">
+                <span class="formI" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">username Error<</span>
+            </div>
+            <div class="form">
+                <label for="email" class="formL">Email:</label>
+                <input class="formI" id="email" type="email" th:field="*{email}">
+                <span class="formI" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email Error<</span>
+            </div>
+            <div class="form">
+                <label for="password" class="formL">Password:</label>
+                <input class="formI" id="password" type="password" th:field="*{password}" pattern=".{8,20}" required title="8 to 20 characters required">
+                <span class="formI" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password Error<</span>
+            </div>
+            <div class="form">
+                <button class="button" type="submit">Apply</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div id="best-events">
+        <span class="title">Events:</span>
+        <div class="eventO">Crazy House Party</div>
+        <div class="eventO">Pizza Evening</div>
+        <div class="eventO">Calisthenics workout</div>
+        <div class="eventO">Path of Exile leaguestart party</div>
+        <div class="eventO">Css course</div>
+    </div>
 </div>
-<div class="form">
-    <form method="post" th:action="@{/register}" th:object="${user}">
-        <label for="firstname" th:text="'First name'"></label>
-        <input id="firstname" type="text" th:field="*{firstName}"></br>
-        <b th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName Error</b>
 
-        <label for="lastname" th:text="'Last name'"></label>
-        <input id="lastname" type="text" th:field="*{lastName}"></br>
-        <b th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">lastName Error</b>
-
-        <label for="username" th:text="Username"></label>
-        <input id="username" type="text" th:field="*{username}"></br>
-        <b th:if="${#fields.hasErrors('username')}" th:errors="*{username}">username Error</b>
-
-        <label for="password" th:text="Password"></label>
-        <input id="password" type="password" th:field="*{password}"></br>
-        <b th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password Error</b>
-
-        <label for="email" th:text="Email"></label>
-        <input id="email" type="email" th:field="*{email}"></br>
-        <b th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email Error</b>
-
-        <input id="robotValidation" type="checkbox">
-        <label for="robotValidation" th:text="'definitely not a robot'"></label></br>
-
-        <button class="btn btn-primary" type="submit">Save</button>
-    </form>
-</div>
 </body>
 <script src="/webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </html>

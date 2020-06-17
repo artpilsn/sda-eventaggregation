@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>First Page</title>
+    <title>Login</title>
     <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
@@ -10,10 +11,7 @@
 <div id="container">
     <div id="user-options">
         <div class="optionT">Log In</div>
-
-        <div class="optionT"><a href="register">Create Account</a></div>
-
-
+        <div class="in-use">Create Account</div>
         <div class="optionT">User Support</div>
         <div style="clear:both;"></div>
     </div>
@@ -28,11 +26,19 @@
         <div style="clear:both;"></div>
     </div>
     <div id="content">
-        <span class="title">What's that about?</span><br/>
-        This site was created for YOU by a team of professional Full-Stack developers so YOU can
-        take part in any event YOU desire. YOU may not even know so far that this kind of events
-        took place near you! So feel free to register and experience any event you want, no matter
-        if that's crazy house party or cozy book-evening in a café.
+        <span class="title">Login:</span>
+
+        <div class="form">
+            <label class="formL">Username:</label>
+            <input class="formI">
+        </div>
+        <div class="form">
+            <label class="formL">Password:</label>
+            <input class="formI">
+        </div>
+        <div class="form">
+            <button class="button" type="submit">Apply</button>
+        </div>
     </div>
 
     <div id="best-events">
@@ -44,5 +50,6 @@
         <div class="eventO">Css course</div>
     </div>
 </div>
+
 </body>
 </html>

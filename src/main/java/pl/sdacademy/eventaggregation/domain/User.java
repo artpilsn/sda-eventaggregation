@@ -1,15 +1,13 @@
 package pl.sdacademy.eventaggregation.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
@@ -19,29 +17,40 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Entity(name = "users")
 public class User {
+
     @Id
     @GeneratedValue
     private Long id;
 
-    @NotNull(message = "Pole nie może być puste")
-    @Length(min = 1, max = 15)
+    @NotNull(message = "Can't be empty")
+    @Length(min = 1, max = 15, message = "1 to 15 characters required")
     private String firstName;
 
-    @NotNull(message = "Pole nie może być puste")
-    @Length(min = 1, max = 15)
+    @NotNull(message = "Can't be empty")
+    @Length(min = 1, max = 15, message = "1 to 15 characters required")
     private String lastName;
 
-    @NotNull(message = "Pole nie może być puste")
-    @Length(min = 1, max = 50)
+    @NotNull(message = "Can't be empty")
+    @Length(min = 1, max = 50, message = "1 to 15 characters required")
     private String username;
 
-    @NotNull(message = "Pole nie może być puste")
-    @Length(min = 8, max = 30, message = "Długość hasła powinna mieć od 8 do 30 znaków")
+    //validation moved toregister.html
+    @NotNull(message = "Can't be empty")
     private String password;
 
     @Column(name = "user_email")
     @Email(message = "Email should have proper format")
     private String email;
 
-    private Role NORMAL_USER;
+    @Column(name = "user_role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public User(String firstName, String lastName, String username, String password, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }

@@ -26,10 +26,8 @@ public class RegisterController {
     @GetMapping
     public String showUserPage(final ModelMap modelMap) {
         modelMap.addAttribute(MODEL_ATTR_USER, new User());
-
         return "register";
     }
-
 
     @PostMapping
     public String handleSaveUser(@Valid @ModelAttribute(name = MODEL_ATTR_USER) final User user, final BindingResult bindingResult,
@@ -44,7 +42,7 @@ public class RegisterController {
             modelMap.addAttribute("email", user.getEmail());
             modelMap.addAttribute("password", user.getPassword());
             userService.createUser(user);
-            return "user_page";
+            return "login-user";
         }
     }
 }
