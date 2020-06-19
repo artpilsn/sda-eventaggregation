@@ -86,4 +86,5 @@ class EventTest {
 
         validate(event, expectedMessage, expectedField);
     }
+
 }
