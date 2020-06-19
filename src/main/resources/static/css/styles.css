@@ -1,0 +1,117 @@
+body {
+    background-color: #3d3232;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+#container {
+    width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#user-options{
+    color: whitesmoke;
+    margin-top: 5px;
+}
+
+#logo{
+    color: whitesmoke;
+    margin-top: 20px;
+    font-size: 40px;
+    letter-spacing: 3px;
+    font-weight: 900;
+}
+#map-bar{
+    background-color: #452828;
+    color: whitesmoke;
+    margin-top: 20px;
+    font-size: 10px;
+}
+#content{
+    float: left;
+    background-color: #a89470;
+    margin-top: 20px;
+    min-height: 800px;
+    width: 838px;
+    padding: 30px;
+    font-size: 18px;
+    border-right: 2px solid whitesmoke;
+}
+#best-events{
+    float: left;
+    background-color: #a89470;
+    margin-top: 20px;
+    min-height: 800px;
+    width: 238px;
+    padding: 30px;
+
+}
+
+.title{
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.optionT{
+    float: left;
+    min-width: 60px;
+    height: 25px;
+    font-size: 12px;
+    padding: 10px;
+}
+.option{
+    float: left;
+    min-width: 128px;
+    height: 25px;
+    font-size: 18px;
+    padding: 10px;
+    border-right: 2px solid whitesmoke;
+    opacity: 0.8;
+}
+
+.eventO{
+    float: top;
+    min-width: 214px;
+    min-height: 120px;
+    padding: 10px;
+    border: 2px solid black;
+    margin-top: 5px;
+}
+.optionT:hover{
+    color: #477942;
+    cursor: pointer;
+}
+.option:hover{
+    background-color: #477942;
+    cursor: pointer;
+}
+.eventO:hover{
+    background-color: #937f56;
+    cursor: pointer;
+}
+.in-use{
+    color: gray;
+    float: left;
+    min-width: 60px;
+    height: 25px;
+    font-size: 12px;
+    padding: 10px;
+}
+.form{
+    height: 25px;
+    padding: 10px;
+}
+.formL{
+    display: inline-block;
+    min-width: 140px;
+}
+.formI{
+    display: inline-block;
+    min-width: 250px;
+}
+.button{
+    font-weight: 900;
+    padding: 5px;
+    font-size: 20px;
+}
+
