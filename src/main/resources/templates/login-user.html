@@ -26,19 +26,25 @@
         <div style="clear:both;"></div>
     </div>
     <div id="content">
-        <span class="title">Login:</span>
+        <form method="post" th:action="@{/login-user}" th:object="${user}">
+            <span class="title">Login:</span>
 
-        <div class="form">
-            <label class="formL">Username:</label>
-            <input class="formI">
-        </div>
-        <div class="form">
-            <label class="formL">Password:</label>
-            <input class="formI">
-        </div>
-        <div class="form">
-            <button class="button" type="submit">Apply</button>
-        </div>
+            <div class="form">
+                <label for="username" class="formL">Username:</label>
+                <input class="formI" id="username" type="text" th:field="*{username}">
+                <span class="formI" th:if="${#fields.hasErrors('username')}"
+                      th:errors="*{username}">username Error<</span>
+            </div>
+            <div class="form">
+                <label for="password" class="formL">Password:</label>
+                <input class="formI" id="password" type="password" th:field="*{password}">
+                <span class="formI" th:if="${#fields.hasErrors('password')}"
+                      th:errors="*{password}">password Error<</span>
+            </div>
+            <div class="form">
+                <button class="button" type="submit">Apply</button>
+            </div>
+        </form>
     </div>
 
     <div id="best-events">

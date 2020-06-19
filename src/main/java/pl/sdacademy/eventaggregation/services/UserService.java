@@ -27,9 +27,6 @@ public class UserService {
     public User getByUsername(final String username){
         return userRepository.findById(username).orElseThrow();
     }
-    public User getByEmail(final String email){
-        return userRepository.findById(email).orElseThrow();
-    }
 
 }
 

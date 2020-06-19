@@ -42,7 +42,7 @@ public class RegisterController {
             modelMap.addAttribute("email", user.getEmail());
             modelMap.addAttribute("password", user.getPassword());
             userService.createUser(user);
-            return "login-user";
+            return "redirect:/login-user";
         }
     }
 }
