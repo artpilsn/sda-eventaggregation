@@ -13,6 +13,7 @@ import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.util.Objects.nonNull;
 
@@ -36,10 +37,10 @@ public class Event {
     @Length(min = 20, max = 500, message = "Description should be up to 500 characters long - but not less than 20 characters.")
     private String description;
 
-    //TODO: relation + User object
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "host", referencedColumnName = "username")
     @NotNull(message = "Host cannot be empty.")
-    @Column(name = "host")
-    private String hostUsername;
+    private User host;
 
     @Column(name = "event_starts")
     private LocalDateTime from;
@@ -49,6 +50,9 @@ public class Event {
 
     @Column(name = "address")
     private String address;
+
+    @ManyToMany
+    private List<User> participants;
 
     @JsonIgnore
     @AssertTrue(message = "Invalid begin/end of event - both fields are required.")

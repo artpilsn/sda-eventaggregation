@@ -13,8 +13,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder;
+import pl.sdacademy.eventaggregation.controllers.EventApiController;
+import pl.sdacademy.eventaggregation.model.EventConverter;
 import pl.sdacademy.eventaggregation.model.EventModels;
-import pl.sdacademy.eventaggregation.service.EventService;
+import pl.sdacademy.eventaggregation.services.EventCrudService;
+import pl.sdacademy.eventaggregation.services.EventSearchService;
 
 import java.util.List;
 
@@ -32,11 +35,17 @@ class EventApiControllerTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private EventService eventService;
+    private EventCrudService eventCrudService;
+
+    @Mock
+    private EventSearchService eventSearchService;
+
+    @Mock
+    private EventConverter eventConverter;
 
     @BeforeEach
     void setup() {
-        EventApiController eventApi = new EventApiController(eventService);
+        EventApiController eventApi = new EventApiController(eventCrudService, eventSearchService, eventConverter);
         StandaloneMockMvcBuilder mvcBuilder = MockMvcBuilders.standaloneSetup(eventApi);
         this.mockMvc = mvcBuilder.build();
         this.objectMapper = new ObjectMapper();
@@ -44,7 +53,7 @@ class EventApiControllerTest {
 
     @Test
     void shouldReturnEventModelsWithEmptyList() throws Exception {
-        when(eventService.getAll()).thenReturn(EMPTY_EVENT_MODELS);
+        when(eventCrudService.getAll()).thenReturn(List.of());
 
         final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/events")
                 .accept(MediaType.APPLICATION_JSON))

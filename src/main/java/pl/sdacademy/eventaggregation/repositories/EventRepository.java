@@ -1,4 +1,4 @@
-package pl.sdacademy.eventaggregation.repository;
+package pl.sdacademy.eventaggregation.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import pl.sdacademy.eventaggregation.domain.Event;

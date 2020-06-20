@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 
 class EventTest {
 
@@ -30,13 +31,11 @@ class EventTest {
                 .description("Some long description, that will have over 20 characters.")
                 .from(LocalDateTime.of(2020,6, 30, 18,0))
                 .to(LocalDateTime.of(2020, 7, 1, 3, 30))
-                .hostUsername("Enessetere")
+                .host(any(User.class))
                 .build();
 
         validate(event);
     }
-
-
 
     private void validate(final Event event) {
         shouldReturnNoErrors(validator.validate(event));
@@ -52,7 +51,7 @@ class EventTest {
         final Event event = Event.builder()
                 .title(title)
                 .description(description)
-                .hostUsername(hostUsername)
+                .host(any(User.class))
                 .from(LocalDateTime.of(2020,6, 30, 18,0))
                 .to(LocalDateTime.of(2020, 7, 1, 3, 30))
                 .build();
@@ -77,7 +76,7 @@ class EventTest {
                                 final Integer toYear, final Integer toMonth, final Integer toDay, final Integer toHour, final Integer toMinute,
                                 final String expectedMessage, final String expectedField) {
         final Event event = Event.builder()
-                .hostUsername("Enessetere")
+                .host(any(User.class))
                 .description("Some long text with more than 20 character")
                 .title("title")
                 .from((fromYear != null) ? LocalDateTime.of(fromYear, fromMonth, fromDay, fromHour, fromMinute) : null)
