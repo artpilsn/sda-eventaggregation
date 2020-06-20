@@ -24,6 +24,14 @@ public class OnApplicationStartup implements ApplicationListener<ContextRefreshe
             .from(LocalDateTime.of(2020, 7, 1, 12, 0))
             .to(LocalDateTime.of(2020, 7, 2, 12, 0))
             .build();
+    private static final EventModel OTHER_MODEL = EventModel.builder()
+            .title("OtherTitle")
+            .description("Other long as hell description that match validation")
+            .hostUsername("OtherHost")
+            .address("OtherAddress")
+            .from(LocalDateTime.of(2020, 7, 1, 12, 0))
+            .to(LocalDateTime.of(2020, 7, 2, 12, 0))
+            .build();
 
     public OnApplicationStartup(final EventService eventService) {
         this.eventService = eventService;
@@ -33,5 +41,6 @@ public class OnApplicationStartup implements ApplicationListener<ContextRefreshe
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         eventService.create(MODEL);
+        eventService.create(OTHER_MODEL);
     }
 }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Upcoming events</title>
+</head>
+<body>
+<div id="upcoming-events" th:each="event : ${events.getEventModels()}">
+    <div>
+        <p id="event-title" th:text="${event.title}">TITLE</p><br/>
+        <span id="event-host" th:text="${event.hostUsername}">HOST</span><span th:text=" ${event.address}"></span><br/>
+        <span id="event-dates" th:text="${event.from}">FROM</span> - <span th:text="${event.to}"></span><br/>
+        <p id="event-description" th:text="${event.description}">DESCRIPTION</p>
+    </div>
+</div>
+</body>
+</html>
