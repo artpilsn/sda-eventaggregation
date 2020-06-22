@@ -3,7 +3,10 @@ package pl.sdacademy.eventaggregation.services;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sdacademy.eventaggregation.domain.Event;
+import pl.sdacademy.eventaggregation.domain.Role;
+import pl.sdacademy.eventaggregation.domain.User;
 import pl.sdacademy.eventaggregation.exception.EventException;
+import pl.sdacademy.eventaggregation.exception.UserException;
 import pl.sdacademy.eventaggregation.model.EventConverter;
 import pl.sdacademy.eventaggregation.model.EventModel;
 import pl.sdacademy.eventaggregation.repositories.EventRepository;
@@ -39,12 +42,16 @@ public class EventCrudService {
         return eventRepository.findById(idx).orElseThrow(() -> new EventException("Event with idx " + idx + " does not exist"));
     }
 
-    public Event create(final EventModel model) {
-        if (!isEventExisting(model)) {
-            model.setIdx(null);
-            return eventRepository.save(prepareEventToSave(model));
+    public Event create(final EventModel model, final User user) {
+        if (user.getRole() == Role.ORGANIZER) {
+            if (!isEventExisting(model)) {
+                model.setIdx(null);
+                model.setHostUsername(user.getUsername());
+                return eventRepository.save(prepareEventToSave(model));
+            }
+            throw new EventException("You have created same event in this time gap.");
         }
-        throw new EventException("You have created same event in this time gap.");
+        throw new UserException("You don't have privilege to create new event.");
     }
 
     private Boolean isEventExisting(final EventModel model) {

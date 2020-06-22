@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.sdacademy.eventaggregation.domain.Event;
+import pl.sdacademy.eventaggregation.domain.Role;
 import pl.sdacademy.eventaggregation.domain.User;
 import pl.sdacademy.eventaggregation.exception.EventException;
 import pl.sdacademy.eventaggregation.model.EventConverter;
@@ -72,6 +73,14 @@ class EventCrudServiceTest {
             .to(LocalDateTime.of(2020, 8, 5, 21, 30))
             .build();
     private static final List<Event> EVENTS_WITH_CORRECT_EVENT = List.of(CORRECT_EVENT);
+    private static final User ORGANIZER = User.builder()
+            .username("Username")
+            .firstName("FirstName")
+            .lastName("LastName")
+            .email("user@email.com")
+            .password("password")
+            .role(Role.ORGANIZER)
+            .build();
     //endregion
 
     @Mock
@@ -127,7 +136,7 @@ class EventCrudServiceTest {
         when(eventRepository.findAllByTitle(any(String.class))).thenReturn(List.of());
         when(eventConverter.eventModelToEvent(CORRECT_EVENT_MODEL_WITHOUT_INDEX)).thenReturn(CORRECT_EVENT_WITHOUT_INDEX);
 
-        final Event actualResult = eventCrudService.create(CORRECT_EVENT_MODEL_WITHOUT_INDEX);
+        final Event actualResult = eventCrudService.create(CORRECT_EVENT_MODEL_WITHOUT_INDEX, ORGANIZER);
 
         assertThat(actualResult).isNotNull().isExactlyInstanceOf(Event.class).isEqualTo(CORRECT_EVENT);
     }
@@ -137,7 +146,7 @@ class EventCrudServiceTest {
         when(eventRepository.findAllByTitle(any(String.class))).thenReturn(EVENTS_WITH_CORRECT_EVENT);
 
         final EventException eventException = assertThrows(EventException.class,
-                () -> eventCrudService.create(CORRECT_EVENT_MODEL_WITHOUT_INDEX));
+                () -> eventCrudService.create(CORRECT_EVENT_MODEL_WITHOUT_INDEX, ORGANIZER));
         assertThat(eventException).hasMessage("You have created same event in this time gap.");
     }
 

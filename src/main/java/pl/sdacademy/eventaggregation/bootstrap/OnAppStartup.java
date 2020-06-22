@@ -30,7 +30,7 @@ public class OnAppStartup implements CommandLineRunner {
     private static final EventModel OTHER_MODEL = EventModel.builder()
             .title("OtherTitle")
             .description("Other long as hell description that match validation")
-            .hostUsername("Basia01")
+            .hostUsername("CzesiekC")
             .address("OtherAddress")
             .from(LocalDateTime.of(2020, 7, 1, 12, 0))
             .to(LocalDateTime.of(2020, 7, 2, 12, 0))
@@ -54,7 +54,7 @@ public class OnAppStartup implements CommandLineRunner {
         userService.createUser(user1);
         userService.createUser(user2);
         userService.createUser(user3);
-        eventCrudService.create(MODEL);
-        eventCrudService.create(OTHER_MODEL);
+        eventCrudService.create(MODEL, user3);
+        eventCrudService.create(OTHER_MODEL, user3);
     }
 }
