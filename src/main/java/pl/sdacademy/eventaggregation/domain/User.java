@@ -19,9 +19,11 @@ import java.util.List;
 @Entity(name = "users")
 public class User {
 
+/*
     @Id
     @GeneratedValue
     private Long id;
+*/
 
     @NotNull(message = "Can't be empty")
     @Length(min = 1, max = 15, message = "1 to 15 characters required")
@@ -31,6 +33,7 @@ public class User {
     @Length(min = 1, max = 15, message = "1 to 15 characters required")
     private String lastName;
 
+    @Id
     @NotNull(message = "Can't be empty")
     @Length(min = 1, max = 50, message = "1 to 50 characters required")
     private String username;
