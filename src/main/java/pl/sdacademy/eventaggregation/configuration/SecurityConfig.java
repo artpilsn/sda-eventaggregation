@@ -1,5 +1,6 @@
 package pl.sdacademy.eventaggregation.configuration;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,7 +12,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
 
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(@Qualifier("customUserDetailsService") final UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -22,14 +23,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login-user", "/register", "/css/styles.css").permitAll()
                 .antMatchers("/h2").permitAll()
-//                .antMatchers("/**")
-//                .authenticated()
+                .antMatchers("/**")
+                .authenticated()
                 .anyRequest().permitAll()
                 .and()
-                .formLogin()
+                .formLogin().loginPage("/login-user").successForwardUrl("/home")
                 .and()
                 .logout()
                 .and()
                 .headers().frameOptions().disable();
+    }
+
+    @Override
+    public UserDetailsService userDetailsServiceBean() throws Exception {
+        return userDetailsService;
     }
 }

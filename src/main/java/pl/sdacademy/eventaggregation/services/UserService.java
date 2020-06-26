@@ -19,9 +19,10 @@ public class UserService {
     }
 
     public void createUser(final User user) {
-        final User newUser = new User(user.getFirstName(), user.getLastName(), user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getEmail());
-        newUser.setRole(Role.NORMAL_USER);
-        userRepository.save(newUser);
+//        final User newUser = new User(user.getFirstName(), user.getLastName(), user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getEmail());
+//        newUser.setRole(Role.NORMAL_USER);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     public User getByUsername(final String username){

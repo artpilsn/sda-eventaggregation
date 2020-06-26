@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static java.util.Objects.nonNull;
 
@@ -30,6 +31,8 @@ public class EventModel {
     private String hostUsername;
 
 
+    private String fromString;
+    private String toString;
     private LocalDateTime from;
     private LocalDateTime to;
     private String address;
@@ -37,8 +40,18 @@ public class EventModel {
     @JsonIgnore
     @AssertTrue(message = "Invalid begin/end of event - both fields are required.")
     private boolean isDateValid() {
+        convertStringDateToLocalDateTime();
         return nonNull(from) && nonNull(to)
                 && from.isAfter(LocalDateTime.now())
                 && to.isAfter(from);
+    }
+
+    private void  convertStringDateToLocalDateTime() {
+        if (nonNull(fromString)) {
+            from = LocalDateTime.parse(fromString, DateTimeFormatter.ISO_DATE_TIME);
+        }
+        if (nonNull(toString)) {
+            to = LocalDateTime.parse(toString, DateTimeFormatter.ISO_DATE_TIME);
+        }
     }
 }

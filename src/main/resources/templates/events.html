@@ -16,5 +16,19 @@
         <p id="event-description" th:text="${event.description}">DESCRIPTION</p>
     </div>
 </div>
+<form method="post" th:object="${newEvent}" action="/events">
+    <label for="title">Title: </label>
+    <input id="title" type="text" th:field="*{title}"><br/>
+    <label for="description">Description: </label>
+    <input id="description" type="text" th:field="*{description}"><br/>
+    <label for="address">Address: </label>
+    <input id="address" type="text" th:field="*{address}"><br/>
+    <label for="starts">Starts: </label>
+    <input id="starts" type="datetime-local" th:field="*{fromString}">
+    <br/>
+    <label for="ends">Ends: </label>
+    <input id="ends" type="datetime-local" th:field="*{toString}"><br/>
+    <input type="submit" value="Add event"><br/>
+</form>
 </body>
 </html>

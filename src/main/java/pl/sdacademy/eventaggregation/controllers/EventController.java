@@ -33,11 +33,11 @@ public class EventController {
 
     @GetMapping
     public String getAll(final ModelMap modelMap) {
-        modelMap.addAttribute("events", prepareAllEventsToSend());
         modelMap.addAttribute("newEvent", new EventModel());
         return "events";
     }
 
+    @ModelAttribute("events")
     private EventModels prepareAllEventsToSend() {
         return new EventModels(convertEventListToEventModelList());
     }
